@@ -254,7 +254,7 @@ class Signin extends StatelessWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed: () => Get.to(() => Signup()),
+                      onPressed: () => Get.offAll(() => Signup()),
                       child: Text(
                         "Create one now",
                         style: TextStyle(
