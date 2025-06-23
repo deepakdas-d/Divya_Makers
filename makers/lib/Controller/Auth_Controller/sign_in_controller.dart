@@ -35,7 +35,7 @@ class SigninController extends GetxController {
   Future<String?> getEmailFromPhone(String phone) async {
     try {
       final query = await FirebaseFirestore.instance
-          .collection('Makers')
+          .collection('users')
           .where('phone', isEqualTo: phone)
           .limit(1)
           .get();
@@ -55,7 +55,7 @@ class SigninController extends GetxController {
         email = input;
       } else if (_isValidPhone(input)) {
         final query = await FirebaseFirestore.instance
-            .collection('Makers')
+            .collection('users')
             .where('phone', isEqualTo: input)
             .limit(1)
             .get();
@@ -74,14 +74,24 @@ class SigninController extends GetxController {
 
       uid ??= userCredential.user?.uid;
 
-      final makersDoc = await FirebaseFirestore.instance
-          .collection('Makers')
+      final usersDoc = await FirebaseFirestore.instance
+          .collection('users')
           .doc(uid)
           .get();
 
-      if (!makersDoc.exists || makersDoc['role'] != 'Makers') {
+      if (!usersDoc.exists) {
         await FirebaseAuth.instance.signOut();
-        return 'Access denied. You are not a Makers.';
+        return 'Access denied. User does not exist.';
+      }
+
+      if (usersDoc['role'] != 'maker') {
+        await FirebaseAuth.instance.signOut();
+        return 'Access denied. You are not a Maker.';
+      }
+
+      if (usersDoc['isActive'] != true) {
+        await FirebaseAuth.instance.signOut();
+        return 'Access denied. You are Disabled.';
       }
 
       return null;
@@ -94,5 +104,17 @@ class SigninController extends GetxController {
 
   void togglePasswordVisibility() {
     isPasswordVisible.value = !isPasswordVisible.value;
+  }
+
+  void clearFields() {
+    emailOrPhoneController.clear();
+    passwordController.clear();
+  }
+
+  @override
+  void onClose() {
+    emailOrPhoneController.dispose();
+    passwordController.dispose();
+    super.onClose();
   }
 }

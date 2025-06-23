@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:makers/Auth/signin.dart';
+import 'package:makers/Auth/Screens/signin.dart';
 
 class SignupController extends GetxController {
   final emailController = TextEditingController();

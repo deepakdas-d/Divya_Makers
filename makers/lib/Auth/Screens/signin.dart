@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:makers/Auth/forgot_password.dart';
-import 'package:makers/Auth/signup.dart';
-import 'package:makers/Controller/sign_in_controller.dart';
-import 'package:makers/home.dart';
+import 'package:makers/Auth/Screens/forgot_password.dart';
+import 'package:makers/Auth/Screens/signup.dart';
+import 'package:makers/Controller/Auth_Controller/sign_in_controller.dart';
+import 'package:makers/Screens/home.dart';
 
 class Signin extends StatelessWidget {
   final controller = Get.put(SigninController());
@@ -222,6 +222,9 @@ class Signin extends StatelessWidget {
                       Get.back();
 
                       if (result == null) {
+                        controller.emailOrPhoneController.clear();
+                        controller.passwordController.clear();
+
                         Get.offAll(() => Dashboard());
                         Get.snackbar(
                           "Success",
