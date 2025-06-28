@@ -460,7 +460,7 @@ class _FreeStocksState extends State<FreeStocks>
         appBar: AppBar(
           elevation: 0,
           // Yellow background for app bar
-          backgroundColor: Color(0xFFFFCC3E),
+          backgroundColor: Color(0xFF2196F3),
           foregroundColor: Colors.white,
           systemOverlayStyle: SystemUiOverlayStyle.light,
           title: const Text(

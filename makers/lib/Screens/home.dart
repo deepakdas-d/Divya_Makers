@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:makers/Controller/dashboard_controller.dart';
+import 'package:makers/Screens/complaint.dart';
 import 'package:makers/Screens/free_stocks.dart';
 import 'package:makers/Screens/order_list.dart';
 
@@ -393,7 +394,7 @@ class Dashboard extends StatelessWidget {
           subtitle: 'Handle customer complaints',
           icon: Icons.report_problem_rounded,
           iconColor: Color(0xFFFF9800),
-          onTap: () => _showComingSoonDialog(),
+          onTap: () => Get.to(() => Complaint()),
           size: size,
         ),
       ],
