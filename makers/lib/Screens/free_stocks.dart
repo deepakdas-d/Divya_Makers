@@ -27,7 +27,7 @@ class _FreeStocksState extends State<FreeStocks>
   // Stores the current search query for filtering products
   String _searchQuery = '';
   // Tracks whether search mode is active (not currently used but reserved for future functionality)
-  bool _isSearching = false;
+  // bool _isSearching = false;
 
   @override
   void initState() {
@@ -63,7 +63,7 @@ class _FreeStocksState extends State<FreeStocks>
       // Update the stock field in Firestore
       await _products.doc(productId).update({'stock': newStock});
       // Show success notification
-      _showSuccessSnackBar('Stock updated successfully');
+      // _showSuccessSnackBar('Stock updated successfully');
       // Provide haptic feedback for user interaction
       HapticFeedback.lightImpact();
     } catch (e) {
@@ -100,25 +100,25 @@ class _FreeStocksState extends State<FreeStocks>
   }
 
   // Displays a success SnackBar with a custom message
-  void _showSuccessSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            // Success icon
-            const Icon(Icons.check_circle, color: Colors.white, size: 20),
-            const SizedBox(width: 8),
-            Text(message),
-          ],
-        ),
-        // Green background for success
-        backgroundColor: const Color(0xFF4CAF50),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
+  // void _showSuccessSnackBar(String message) {
+  //   ScaffoldMessenger.of(context).showSnackBar(
+  //     SnackBar(
+  //       content: Row(
+  //         children: [
+  //           // Success icon
+  //           const Icon(Icons.check_circle, color: Colors.white, size: 20),
+  //           const SizedBox(width: 8),
+  //           Text(message),
+  //         ],
+  //       ),
+  //       // Green background for success
+  //       backgroundColor: const Color(0xFF4CAF50),
+  //       behavior: SnackBarBehavior.floating,
+  //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+  //       duration: const Duration(seconds: 2),
+  //     ),
+  //   );
+  // }
 
   // Displays an error SnackBar with a custom message
   void _showErrorSnackBar(String message) {

@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -7,61 +6,104 @@ import 'package:makers/Auth/Screens/signin.dart';
 class DashboardController extends GetxController {
   var stockData = <Map<String, dynamic>>[].obs;
   var isLoading = true.obs;
+  final orderCount = (-1).obs; // -1 indicates loading
+  final pendingCount = (-1).obs;
+  final outForDeliveryCount = (-1).obs;
+  final inProgressCount = (-1).obs;
+  final acceptedCount = (-1).obs;
+  DateTime? lastFetchedMonth;
 
   @override
   void onInit() {
     super.onInit();
-    fetchStockData();
-  }
-
-  Future<void> fetchStockData() async {
-    try {
-      isLoading.value = true;
-      QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('products')
-          .orderBy('name')
-          .get();
-
-      List<Map<String, dynamic>> data = [];
-      for (var doc in snapshot.docs) {
-        var docData = doc.data() as Map<String, dynamic>;
-        data.add({
-          'name': docData['name'] ?? 'Unknown',
-          'stock': docData['stock'] is num ? docData['stock'] : 0,
-          'price': docData['price'] is num ? docData['price'] : 0,
-          'imageUrl': docData['imageUrl'] ?? '',
-          'description': docData['description'] ?? '',
-          'color': _getRandomColor(doc.id),
-        });
+    fetchOrderCounts();
+    ever(orderCount, (_) {
+      final now = DateTime.now();
+      if (lastFetchedMonth == null ||
+          now.month != lastFetchedMonth!.month ||
+          now.year != lastFetchedMonth!.year) {
+        fetchOrderCounts();
       }
-
-      stockData.assignAll(data);
-      isLoading.value = false;
-    } catch (e) {
-      print('Error fetching stock data: $e');
-      isLoading.value = false;
-      Get.snackbar(
-        'Error',
-        'Failed to fetch stock data: $e',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    }
+    });
   }
 
-  Color _getRandomColor(String docId) {
-    List<Color> colors = [
-      Color(0xFF3F51B5),
-      Color(0xFFE91E63),
-      Color(0xFF009688),
-      Color(0xFFFF5722),
-      Color(0xFF4CAF50),
-      Color(0xFF673AB7),
-      Color(0xFF2196F3),
-      Color(0xFFF44336),
-      Color(0xFFFFC107),
-      Color(0xFF795548),
-    ];
-    return colors[docId.hashCode.abs() % colors.length];
+  void fetchOrderCounts() async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final now = DateTime.now();
+        final startOfMonth = DateTime(now.year, now.month, 1);
+        final endOfMonth = DateTime(
+          now.year,
+          now.month + 1,
+          1,
+        ).subtract(Duration(seconds: 1));
+
+        final querySnapshot = await FirebaseFirestore.instance
+            .collection('Orders')
+            .where('makerId', isEqualTo: user.uid)
+            .where(
+              'createdAt',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfMonth),
+            )
+            .where(
+              'createdAt',
+              isLessThanOrEqualTo: Timestamp.fromDate(endOfMonth),
+            )
+            .get();
+
+        int pending = 0, outForDelivery = 0, inProgress = 0, accepted = 0;
+        for (var doc in querySnapshot.docs) {
+          // Check if order_status field exists and is a valid string
+          if (doc.data().containsKey('order_status') &&
+              doc['order_status'] is String) {
+            final status = doc['order_status'];
+            switch (status) {
+              case 'pending':
+                pending++;
+                break;
+              case 'sent out for delivery':
+                outForDelivery++;
+                break;
+              case 'inprogress':
+                inProgress++;
+                break;
+              case 'accepted':
+                accepted++;
+                break;
+              default:
+                print('Unknown order_status: $status in document ${doc.id}');
+              // Handle unexpected status values if needed
+            }
+          } else {
+            print('Missing or invalid order_status in document ${doc.id}');
+          }
+        }
+
+        orderCount.value = querySnapshot.docs.length;
+        pendingCount.value = pending;
+        outForDeliveryCount.value = outForDelivery;
+        inProgressCount.value = inProgress;
+        acceptedCount.value = accepted;
+        lastFetchedMonth = now;
+        isLoading.value = false;
+      } else {
+        orderCount.value = 0;
+        pendingCount.value = 0;
+        outForDeliveryCount.value = 0;
+        inProgressCount.value = 0;
+        acceptedCount.value = 0;
+        isLoading.value = false;
+      }
+    } catch (e) {
+      print('Error fetching order counts: $e');
+      orderCount.value = 0;
+      pendingCount.value = 0;
+      outForDeliveryCount.value = 0;
+      inProgressCount.value = 0;
+      acceptedCount.value = 0;
+      isLoading.value = false;
+    }
   }
 
   Future<void> logout() async {
