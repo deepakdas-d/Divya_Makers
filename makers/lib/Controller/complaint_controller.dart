@@ -15,10 +15,7 @@ class ComplaintController extends GetxController {
   final List<String> categories = [
     'General',
     'Technical Issue',
-    'Billing',
-    'Service Quality',
     'Staff Behavior',
-    'Facility',
     'Other',
   ];
 
@@ -64,6 +61,7 @@ class ComplaintController extends GetxController {
         'status': 'pending',
         'timestamp': FieldValue.serverTimestamp(),
         'createdAt': DateTime.now().toIso8601String(),
+        'statusChanged': false,
       });
 
       Get.snackbar(

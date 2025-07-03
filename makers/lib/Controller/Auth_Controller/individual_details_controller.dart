@@ -37,9 +37,14 @@ class OrderDetailController extends GetxController {
         updateData['deliveryDate'] = Timestamp.fromDate(
           selectedDeliveryDate.value!,
         );
-      } else {
-        updateData['deliveryDate'] =
-            null; // Clear delivery date for other statuses
+      } // If status is 'delivered', keep existing deliveryDate (do nothing)
+      else if (newStatus == 'delivered') {
+        // You can optionally check if deliveryDate is already set
+        // and maybe log it or perform some other logic if needed.
+      }
+      // For all other statuses, clear the deliveryDate
+      else {
+        updateData['deliveryDate'] = null;
       }
 
       // Update Firestore document

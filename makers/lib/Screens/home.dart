@@ -255,56 +255,58 @@ class Dashboard extends StatelessWidget {
   }
 
   Widget _buildQuickStatsSection(DashboardController controller, Size size) {
-    return Row(
-      children: [
-        Expanded(
-          child: _buildStatCard(
-            'Total Orders',
-            controller.orderCount.value >= 0
-                ? '${controller.orderCount.value}'
-                : 'Loading...',
-            Icons.shopping_cart_rounded,
-            Color(0xFF2196F3),
-            size,
+    return Obx(
+      () => Row(
+        children: [
+          Expanded(
+            child: _buildStatCard(
+              'Total Orders',
+              controller.orderCount.value >= 0
+                  ? '${controller.orderCount.value}'
+                  : 'Loading...',
+              Icons.shopping_cart_rounded,
+              Color(0xFF2196F3),
+              size,
+            ),
           ),
-        ),
-        SizedBox(width: size.width * 0.02),
-        Expanded(
-          child: _buildStatCard(
-            'Pending',
-            controller.pendingCount.value >= 0
-                ? '${controller.pendingCount.value}'
-                : 'Loading...',
-            Icons.access_time_rounded,
-            Color(0xFFFF9800),
-            size,
+          SizedBox(width: size.width * 0.02),
+          Expanded(
+            child: _buildStatCard(
+              'Pending',
+              controller.pendingCount.value >= 0
+                  ? '${controller.pendingCount.value}'
+                  : 'Loading...',
+              Icons.access_time_rounded,
+              Color(0xFFFF9800),
+              size,
+            ),
           ),
-        ),
-        SizedBox(width: size.width * 0.02),
-        Expanded(
-          child: _buildStatCard(
-            'In Progress',
-            controller.inProgressCount.value >= 0
-                ? '${controller.inProgressCount.value}'
-                : 'Loading...',
-            Icons.work_rounded,
-            Color(0xFF4CAF50),
-            size,
+          SizedBox(width: size.width * 0.02),
+          Expanded(
+            child: _buildStatCard(
+              'In Progress',
+              controller.inProgressCount.value >= 0
+                  ? '${controller.inProgressCount.value}'
+                  : 'Loading...',
+              Icons.work_rounded,
+              Color(0xFF4CAF50),
+              size,
+            ),
           ),
-        ),
-        SizedBox(width: size.width * 0.02),
-        Expanded(
-          child: _buildStatCard(
-            'Out for Delivery',
-            controller.outForDeliveryCount.value >= 0
-                ? '${controller.outForDeliveryCount.value}'
-                : 'Loading...',
-            Icons.local_shipping_rounded,
-            Color(0xFFE91E63),
-            size,
+          SizedBox(width: size.width * 0.02),
+          Expanded(
+            child: _buildStatCard(
+              'Out for Delivery',
+              controller.outForDeliveryCount.value >= 0
+                  ? '${controller.outForDeliveryCount.value}'
+                  : 'Loading...',
+              Icons.local_shipping_rounded,
+              Color(0xFFE91E63),
+              size,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -508,33 +510,33 @@ class Dashboard extends StatelessWidget {
     );
   }
 
-  void _showComingSoonDialog() {
-    Get.dialog(
-      AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
-          children: [
-            Icon(Icons.info_outline, color: Color(0xFF1E88E5)),
-            SizedBox(width: 8),
-            Text('Coming Soon', style: TextStyle(fontWeight: FontWeight.w600)),
-          ],
-        ),
-        content: Text(
-          'This feature is under development and will be available soon.',
-        ),
-        actions: [
-          ElevatedButton(
-            onPressed: () => Get.back(),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFF1E88E5),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            child: Text('OK', style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
-    );
-  }
+  //   void _showComingSoonDialog() {
+  //     Get.dialog(
+  //       AlertDialog(
+  //         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+  //         title: Row(
+  //           children: [
+  //             Icon(Icons.info_outline, color: Color(0xFF1E88E5)),
+  //             SizedBox(width: 8),
+  //             Text('Coming Soon', style: TextStyle(fontWeight: FontWeight.w600)),
+  //           ],
+  //         ),
+  //         content: Text(
+  //           'This feature is under development and will be available soon.',
+  //         ),
+  //         actions: [
+  //           ElevatedButton(
+  //             onPressed: () => Get.back(),
+  //             style: ElevatedButton.styleFrom(
+  //               backgroundColor: Color(0xFF1E88E5),
+  //               shape: RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.circular(8),
+  //               ),
+  //             ),
+  //             child: Text('OK', style: TextStyle(color: Colors.white)),
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //   }
 }
