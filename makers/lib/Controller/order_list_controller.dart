@@ -340,50 +340,50 @@ class OrderController extends GetxController {
     filteredOrders.value = sorted;
   }
 
-  // Export functionality
-  Future<void> exportFilteredOrders() async {
-    try {
-      // final data = filteredOrders.map((order) {
-      //   final orderData = order.data() as Map<String, dynamic>;
-      //   return {
-      //     'Order ID': orderData['orderId'] ?? '',
-      //     'Name': orderData['name'] ?? '',
-      //     'Phone': orderData['phone1'] ?? '',
-      //     'Product ID': orderData['productID'] ?? '',
-      //     'Status': orderData['order_status'] ?? '',
-      //     'Address': orderData['address'] ?? '',
-      //     'Place': orderData['place'] ?? '',
-      //     'Created At': orderData['createdAt'] != null
-      //         ? DateFormat(
-      //             'yyyy-MM-dd HH:mm',
-      //           ).format((orderData['createdAt'] as Timestamp).toDate())
-      //         : '',
-      //     'Delivery Date': orderData['deliveryDate'] != null
-      //         ? DateFormat(
-      //             'yyyy-MM-dd',
-      //           ).format((orderData['deliveryDate'] as Timestamp).toDate())
-      //         : '',
-      //     'Quantity': orderData['nos'] ?? 0,
-      //     'Remark': orderData['remark'] ?? '',
-      //   };
-      // }).toList();
+  // // Export functionality
+  // Future<void> exportFilteredOrders() async {
+  //   try {
+  //     // final data = filteredOrders.map((order) {
+  //     //   final orderData = order.data() as Map<String, dynamic>;
+  //     //   return {
+  //     //     'Order ID': orderData['orderId'] ?? '',
+  //     //     'Name': orderData['name'] ?? '',
+  //     //     'Phone': orderData['phone1'] ?? '',
+  //     //     'Product ID': orderData['productID'] ?? '',
+  //     //     'Status': orderData['order_status'] ?? '',
+  //     //     'Address': orderData['address'] ?? '',
+  //     //     'Place': orderData['place'] ?? '',
+  //     //     'Created At': orderData['createdAt'] != null
+  //     //         ? DateFormat(
+  //     //             'yyyy-MM-dd HH:mm',
+  //     //           ).format((orderData['createdAt'] as Timestamp).toDate())
+  //     //         : '',
+  //     //     'Delivery Date': orderData['deliveryDate'] != null
+  //     //         ? DateFormat(
+  //     //             'yyyy-MM-dd',
+  //     //           ).format((orderData['deliveryDate'] as Timestamp).toDate())
+  //     //         : '',
+  //     //     'Quantity': orderData['nos'] ?? 0,
+  //     //     'Remark': orderData['remark'] ?? '',
+  //     //   };
+  //     // }).toList();
 
-      // Here you would implement the actual export logic
-      // For example, using csv package or sharing the data
-      Get.snackbar(
-        'Export',
-        'Export functionality would be implemented here',
-        snackPosition: SnackPosition.BOTTOM,
-      );
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to export orders: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red[100],
-      );
-    }
-  }
+  //     // Here you would implement the actual export logic
+  //     // For example, using csv package or sharing the data
+  //     Get.snackbar(
+  //       'Export',
+  //       'Export functionality would be implemented here',
+  //       snackPosition: SnackPosition.BOTTOM,
+  //     );
+  //   } catch (e) {
+  //     Get.snackbar(
+  //       'Error',
+  //       'Failed to export orders: $e',
+  //       snackPosition: SnackPosition.BOTTOM,
+  //       backgroundColor: Colors.red[100],
+  //     );
+  //   }
+  // }
 
   // Refresh orders
   Future<void> refreshOrders() async {

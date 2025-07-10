@@ -4,6 +4,7 @@ import 'package:makers/Controller/dashboard_controller.dart';
 import 'package:makers/Screens/complaint.dart';
 import 'package:makers/Screens/free_stocks.dart';
 import 'package:makers/Screens/order_list.dart';
+import 'package:makers/Screens/profile.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
@@ -69,6 +70,25 @@ class Dashboard extends StatelessWidget {
         centerTitle: false,
       ),
       actions: [
+        Container(
+          margin: EdgeInsets.only(right: size.width * 0.02),
+          child: IconButton(
+            onPressed: () => Get.to(() => Profile()),
+            icon: Container(
+              padding: EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                Icons.account_circle_rounded,
+                color: Colors.white,
+                size: size.width * 0.05,
+              ),
+            ),
+          ),
+        ),
+
         Container(
           margin: EdgeInsets.only(right: size.width * 0.02),
           child: IconButton(

@@ -6,54 +6,46 @@ class OrderDetailController extends GetxController {
   final Map<String, dynamic> orderData;
   final String docId;
   final RxString currentStatus = ''.obs;
-  final Rx<DateTime?> selectedDeliveryDate = Rx<DateTime?>(
-    null,
-  ); // Added for delivery date
+  final Rx<DateTime?> selectedDeliveryDate = Rx<DateTime?>(null);
+
   final List<String> statusOptions = [
     'pending',
     'accepted',
-    'inprogress',
     'sent out for delivery',
     'delivered',
   ];
 
   OrderDetailController({required this.orderData, required this.docId}) {
     currentStatus.value = orderData['order_status'] ?? 'pending';
-    // Initialize delivery date if it exists in orderData
+
     if (orderData['deliveryDate'] != null) {
       selectedDeliveryDate.value = (orderData['deliveryDate'] as Timestamp?)
           ?.toDate();
     }
+
+    // Auto-check delivery status when controller is initialized
+    _checkAndAutoUpdateDeliveryStatus();
   }
 
   Future<void> updateOrderStatus(String newStatus) async {
     try {
-      // Prepare data to update
       Map<String, dynamic> updateData = {'order_status': newStatus};
 
-      // Include or clear delivery date based on status
       if (newStatus == 'sent out for delivery' &&
           selectedDeliveryDate.value != null) {
         updateData['deliveryDate'] = Timestamp.fromDate(
           selectedDeliveryDate.value!,
         );
-      } // If status is 'delivered', keep existing deliveryDate (do nothing)
-      else if (newStatus == 'delivered') {
-        // You can optionally check if deliveryDate is already set
-        // and maybe log it or perform some other logic if needed.
-      }
-      // For all other statuses, clear the deliveryDate
-      else {
+      } else {
         updateData['deliveryDate'] = null;
+        selectedDeliveryDate.value = null;
       }
 
-      // Update Firestore document
       await FirebaseFirestore.instance
           .collection('Orders')
           .doc(docId)
           .update(updateData);
 
-      // Update local status
       currentStatus.value = newStatus;
 
       Get.snackbar(
@@ -63,6 +55,9 @@ class OrderDetailController extends GetxController {
         colorText: Colors.white,
         snackPosition: SnackPosition.BOTTOM,
       );
+
+      // Check for auto-delivery condition
+      _checkAndAutoUpdateDeliveryStatus();
     } catch (e) {
       Get.snackbar(
         'Error',
@@ -74,17 +69,47 @@ class OrderDetailController extends GetxController {
     }
   }
 
-  // Set delivery date
   void setDeliveryDate(DateTime? date) {
     selectedDeliveryDate.value = date;
+    if (currentStatus.value == 'sent out for delivery') {
+      // If status is 'sent out for delivery', update Firestore immediately
+      updateOrderStatus('sent out for delivery');
+    }
+  }
+
+  Future<void> _checkAndAutoUpdateDeliveryStatus() async {
+    if (currentStatus.value == 'sent out for delivery' &&
+        selectedDeliveryDate.value != null) {
+      DateTime now = DateTime.now();
+      DateTime deliveryDate = selectedDeliveryDate.value!;
+
+      if (!deliveryDate.isAfter(now)) {
+        try {
+          await FirebaseFirestore.instance
+              .collection('Orders')
+              .doc(docId)
+              .update({'order_status': 'delivered'});
+
+          currentStatus.value = 'delivered';
+
+          Get.snackbar(
+            'Info',
+            'Order automatically marked as Delivered',
+            backgroundColor: Colors.teal,
+            colorText: Colors.white,
+            snackPosition: SnackPosition.BOTTOM,
+          );
+        } catch (e) {
+          debugPrint("Auto-update delivery error: $e");
+        }
+      }
+    }
   }
 
   Color getStatusColor(String status) {
     switch (status.toLowerCase()) {
       case 'accepted':
         return Colors.green;
-      case 'inprogress':
-        return Colors.orange;
       case 'sent out for delivery':
         return Colors.blue;
       case 'delivered':
@@ -98,8 +123,6 @@ class OrderDetailController extends GetxController {
     switch (status.toLowerCase()) {
       case 'accepted':
         return Icons.check_circle_outline;
-      case 'inprogress':
-        return Icons.build_circle_outlined;
       case 'sent out for delivery':
         return Icons.local_shipping_outlined;
       case 'delivered':
@@ -113,8 +136,6 @@ class OrderDetailController extends GetxController {
     switch (status.toLowerCase()) {
       case 'accepted':
         return 'Accepted';
-      case 'inprogress':
-        return 'In Progress';
       case 'sent out for delivery':
         return 'Out for Delivery';
       case 'delivered':

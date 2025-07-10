@@ -373,7 +373,7 @@ class OrderList extends StatelessWidget {
     final statuses = [
       'pending',
       'accepted',
-      'inprogress',
+
       'sent out for delivery',
       'delivered',
     ];
